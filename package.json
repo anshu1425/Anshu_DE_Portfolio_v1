@@ -1,0 +1,27 @@
+{
+  "name": "anshu-agarwal-portfolio",
+  "private": true,
+  "version": "1.1.0",
+  "type": "module",
+  "description": "Portfolio of Anshu Agarwal, GCP Data Engineer. React + React Router + Three.js + Framer Motion, with a Vue island and Video.js.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.1",
+    "react-helmet-async": "^2.0.5",
+    "framer-motion": "^11.3.19",
+    "three": "^0.160.1",
+    "@react-three/fiber": "^8.17.7",
+    "lucide-react": "^0.417.0",
+    "video.js": "^8.17.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.2"
+  }
+}
