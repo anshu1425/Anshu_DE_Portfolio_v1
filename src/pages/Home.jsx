@@ -682,19 +682,20 @@ function ExperienceSection() {
               href="/Anshu_Resume_final_2026.pdf"
               target="_blank"
               style={{
-                background: 'white',
-                color: 'var(--color-text)',
-                fontWeight: 600,
-                fontSize: 15,
-                padding: '14px 32px',
-                borderRadius: '8px',
-                border: '1px solid var(--color-border)',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+                background: 'var(--color-text)',
+                color: 'white',
+                fontWeight: 700,
+                fontSize: 18,
+                padding: '16px 48px',
+                borderRadius: '12px',
+                border: 'none',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                 textDecoration: 'none',
-                transition: 'all 0.2s'
+                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                display: 'inline-block'
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.1)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.06)'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 32px rgba(0,0,0,0.25)'; e.currentTarget.style.background = '#000'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.15)'; e.currentTarget.style.background = 'var(--color-text)'; }}
             >
               Check my CV
             </a>
