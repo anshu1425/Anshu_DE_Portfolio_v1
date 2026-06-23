@@ -64,7 +64,3 @@ src/
     RevealGalleryStack.jsx Image stack interaction
 ```
 
----
-
-## Deployment
-This project is built using Vite and pure React. It contains no server-side logic and can be deployed directly to any static hosting provider such as Vercel, Netlify, GitHub Pages, or Firebase Hosting. Simply run `npm run build` and deploy the `dist/` directory.
