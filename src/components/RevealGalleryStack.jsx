@@ -102,8 +102,7 @@ export default function RevealGalleryStack(props) {
         overflow: "visible",
         background: backgroundColor,
         borderRadius: cardRadius + 10,
-        perspective: 1200,
-        transformStyle: "preserve-3d"
+        perspective: 1200
       }}
     >
       <div

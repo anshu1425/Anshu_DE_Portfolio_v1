@@ -53,12 +53,34 @@ export default function ElevatedCarousel(props) {
     }
   };
 
-  const handleDragEnd = () => {
+  const wheelTimeout = useRef(null);
+  const handleWheel = (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 15) {
+      if (wheelTimeout.current) return;
+      if (e.deltaX > 0) {
+        handleNext();
+      } else {
+        handlePrevious();
+      }
+      wheelTimeout.current = setTimeout(() => { wheelTimeout.current = null; }, 500);
+    }
+  };
+
+  const handleDragEnd = (event, info) => {
     if (!containerRef.current) return;
+    const swipeThreshold = 40;
     const currentX = x.get();
     const calculatedCenterOffset = containerRef.current.offsetWidth / 2 - cardWidth / 2;
     const cardTotalWidth = cardWidth + cardGap;
-    const newIndex = Math.round((-currentX + calculatedCenterOffset) / cardTotalWidth);
+    
+    let newIndex = Math.round((-currentX + calculatedCenterOffset) / cardTotalWidth);
+    
+    if (info.offset.x < -swipeThreshold || info.velocity.x < -300) {
+      newIndex = activeIndex + 1;
+    } else if (info.offset.x > swipeThreshold || info.velocity.x > 300) {
+      newIndex = activeIndex - 1;
+    }
+
     const clampedIndex = Math.max(0, Math.min(items.length - 1, newIndex));
     startTransition(() => {
       setActiveIndex(clampedIndex);
@@ -73,15 +95,15 @@ export default function ElevatedCarousel(props) {
   };
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", backgroundColor, overflowX: "hidden", overflowY: "visible", position: "relative" }}>
-      <div ref={containerRef} style={{ flex: 1, position: "relative", overflow: "visible", display: "flex", alignItems: "center" }}>
+    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", backgroundColor, overflowX: "hidden", overflowY: "visible", position: "relative", userSelect: "none" }}>
+      <div ref={containerRef} onWheel={handleWheel} style={{ flex: 1, position: "relative", overflow: "visible", display: "flex", alignItems: "center" }}>
         <motion.div
           drag="x"
           dragConstraints={{ left: -(totalWidth - (containerRef.current?.offsetWidth || 0)), right: 0 }}
           dragElastic={0.1}
           onDragStart={() => startTransition(() => setIsDragging(true))}
           onDragEnd={handleDragEnd}
-          style={{ display: "flex", gap: cardGap, x, cursor: isDragging ? "grabbing" : "grab" }}
+          style={{ display: "flex", gap: cardGap, x, cursor: isDragging ? "grabbing" : "grab", touchAction: "pan-y" }}
         >
           {items.map((item, index) => {
             const isActive = index === activeIndex;
@@ -107,7 +129,7 @@ export default function ElevatedCarousel(props) {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
                     {item.img ? (
-                      <img src={item.img} alt={item.title} style={{ width: 80, height: 80, objectFit: 'contain' }} />
+                      <img src={item.img} alt={item.title} draggable="false" style={{ width: 80, height: 80, objectFit: 'contain' }} />
                     ) : (
                       <div style={{ fontSize: 72 }}>{item.icon || '📜'}</div>
                     )}
@@ -143,16 +165,12 @@ export default function ElevatedCarousel(props) {
         </motion.div>
       </div>
 
-      {isMobile && (
-        <>
-          <button onClick={handlePrevious} disabled={activeIndex === 0} style={{ position: "absolute", left: 16, top: `calc(50% - ${elevationOffset / 2}px)`, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10, opacity: activeIndex === 0 ? 0.3 : 1, transition: "opacity 0.2s ease" }} aria-label="Previous">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-          </button>
-          <button onClick={handleNext} disabled={activeIndex === items.length - 1} style={{ position: "absolute", right: 16, top: `calc(50% - ${elevationOffset / 2}px)`, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10, opacity: activeIndex === items.length - 1 ? 0.3 : 1, transition: "opacity 0.2s ease" }} aria-label="Next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
-          </button>
-        </>
-      )}
+      <button onClick={handlePrevious} disabled={activeIndex === 0} style={{ position: "absolute", left: 16, top: `calc(50% - ${elevationOffset / 2}px)`, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 50, opacity: activeIndex === 0 ? 0.3 : 1, transition: "opacity 0.2s ease" }} aria-label="Previous">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+      </button>
+      <button onClick={handleNext} disabled={activeIndex === items.length - 1} style={{ position: "absolute", right: 16, top: `calc(50% - ${elevationOffset / 2}px)`, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 50, opacity: activeIndex === items.length - 1 ? 0.3 : 1, transition: "opacity 0.2s ease" }} aria-label="Next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
     </div>
   );
 }

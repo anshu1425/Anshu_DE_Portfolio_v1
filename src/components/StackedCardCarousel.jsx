@@ -6,7 +6,7 @@ export default function StackedCardCarousel({
   backgroundColor = "transparent",
   cardBackground = "#FFFFFF",
   scrollSensitivity = 3,
-  scrollDirection = "reverse",
+  scrollDirection = "natural",
   cardBorderRadius = 32,
   cardShadowIntensity = 1,
   cardSpacing = 40,
@@ -100,7 +100,7 @@ export default function StackedCardCarousel({
     if (isViewed) {
       return {
         x: 0,
-        y: isMobile ? 600 : 800,
+        y: isMobile ? -600 : -800,
         scale: 0.9,
         opacity: 0,
         zIndex: cards.length + index + 100,
@@ -114,7 +114,7 @@ export default function StackedCardCarousel({
       const mobileScaleReduction = offset * (scaleReduction * 0.625);
       return {
         x: 0,
-        y: offset * (cardSpacing * -0.2),
+        y: offset * (cardSpacing * 0.2),
         scale: Math.max(0.7, 1 - mobileScaleReduction),
         opacity: 1,
         zIndex: cards.length - offset,
@@ -127,7 +127,7 @@ export default function StackedCardCarousel({
     const desktopScaleReduction = offset * scaleReduction;
     return {
       x: 0,
-      y: offset * -cardSpacing,
+      y: offset * cardSpacing,
       scale: Math.max(0.6, 1 - desktopScaleReduction),
       opacity: 1,
       zIndex: cards.length - offset,
