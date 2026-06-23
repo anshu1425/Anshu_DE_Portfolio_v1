@@ -53,12 +53,34 @@ export default function ElevatedCarousel(props) {
     }
   };
 
-  const handleDragEnd = () => {
+  const wheelTimeout = useRef(null);
+  const handleWheel = (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 15) {
+      if (wheelTimeout.current) return;
+      if (e.deltaX > 0) {
+        handleNext();
+      } else {
+        handlePrevious();
+      }
+      wheelTimeout.current = setTimeout(() => { wheelTimeout.current = null; }, 500);
+    }
+  };
+
+  const handleDragEnd = (event, info) => {
     if (!containerRef.current) return;
+    const swipeThreshold = 40;
     const currentX = x.get();
     const calculatedCenterOffset = containerRef.current.offsetWidth / 2 - cardWidth / 2;
     const cardTotalWidth = cardWidth + cardGap;
-    const newIndex = Math.round((-currentX + calculatedCenterOffset) / cardTotalWidth);
+    
+    let newIndex = Math.round((-currentX + calculatedCenterOffset) / cardTotalWidth);
+    
+    if (info.offset.x < -swipeThreshold || info.velocity.x < -300) {
+      newIndex = activeIndex + 1;
+    } else if (info.offset.x > swipeThreshold || info.velocity.x > 300) {
+      newIndex = activeIndex - 1;
+    }
+
     const clampedIndex = Math.max(0, Math.min(items.length - 1, newIndex));
     startTransition(() => {
       setActiveIndex(clampedIndex);
@@ -73,8 +95,8 @@ export default function ElevatedCarousel(props) {
   };
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", backgroundColor, overflowX: "hidden", overflowY: "visible", position: "relative" }}>
-      <div ref={containerRef} style={{ flex: 1, position: "relative", overflow: "visible", display: "flex", alignItems: "center" }}>
+    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", backgroundColor, overflowX: "hidden", overflowY: "visible", position: "relative", userSelect: "none" }}>
+      <div ref={containerRef} onWheel={handleWheel} style={{ flex: 1, position: "relative", overflow: "visible", display: "flex", alignItems: "center" }}>
         <motion.div
           drag="x"
           dragConstraints={{ left: -(totalWidth - (containerRef.current?.offsetWidth || 0)), right: 0 }}

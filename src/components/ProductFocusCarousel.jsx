@@ -53,11 +53,24 @@ export default function ProductFocusCarousel(props) {
     });
   }, [items.length]);
 
+  const wheelTimeout = useRef(null);
+  const handleWheel = useCallback((e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 15) {
+      if (wheelTimeout.current) return;
+      if (e.deltaX > 0) {
+        navigateNext();
+      } else {
+        navigatePrev();
+      }
+      wheelTimeout.current = setTimeout(() => { wheelTimeout.current = null; }, 500);
+    }
+  }, [navigateNext, navigatePrev]);
+
   const handleDragEnd = useCallback((event, info) => {
-    const threshold = 50;
-    if (info.offset.x > threshold) {
+    const threshold = 20;
+    if (info.offset.x > threshold || info.velocity.x > 300) {
       navigatePrev();
-    } else if (info.offset.x < -threshold) {
+    } else if (info.offset.x < -threshold || info.velocity.x < -300) {
       navigateNext();
     }
   }, [navigateNext, navigatePrev]);
@@ -107,8 +120,9 @@ export default function ProductFocusCarousel(props) {
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onWheel={handleWheel}
     >
-      <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", userSelect: "none" }}>
         <motion.div
           style={{ display: "flex", alignItems: "center", justifyContent: "center", position: "relative", width: "100%", height: "100%", touchAction: "pan-y" }}
           drag="x"
