@@ -81,7 +81,7 @@ export default function ElevatedCarousel(props) {
           dragElastic={0.1}
           onDragStart={() => startTransition(() => setIsDragging(true))}
           onDragEnd={handleDragEnd}
-          style={{ display: "flex", gap: cardGap, x, cursor: isDragging ? "grabbing" : "grab" }}
+          style={{ display: "flex", gap: cardGap, x, cursor: isDragging ? "grabbing" : "grab", touchAction: "pan-y" }}
         >
           {items.map((item, index) => {
             const isActive = index === activeIndex;
@@ -107,7 +107,7 @@ export default function ElevatedCarousel(props) {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
                     {item.img ? (
-                      <img src={item.img} alt={item.title} style={{ width: 80, height: 80, objectFit: 'contain' }} />
+                      <img src={item.img} alt={item.title} draggable="false" style={{ width: 80, height: 80, objectFit: 'contain' }} />
                     ) : (
                       <div style={{ fontSize: 72 }}>{item.icon || '📜'}</div>
                     )}
@@ -143,16 +143,12 @@ export default function ElevatedCarousel(props) {
         </motion.div>
       </div>
 
-      {isMobile && (
-        <>
-          <button onClick={handlePrevious} disabled={activeIndex === 0} style={{ position: "absolute", left: 16, top: `calc(50% - ${elevationOffset / 2}px)`, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10, opacity: activeIndex === 0 ? 0.3 : 1, transition: "opacity 0.2s ease" }} aria-label="Previous">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
-          </button>
-          <button onClick={handleNext} disabled={activeIndex === items.length - 1} style={{ position: "absolute", right: 16, top: `calc(50% - ${elevationOffset / 2}px)`, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 10, opacity: activeIndex === items.length - 1 ? 0.3 : 1, transition: "opacity 0.2s ease" }} aria-label="Next">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
-          </button>
-        </>
-      )}
+      <button onClick={handlePrevious} disabled={activeIndex === 0} style={{ position: "absolute", left: 16, top: `calc(50% - ${elevationOffset / 2}px)`, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 50, opacity: activeIndex === 0 ? 0.3 : 1, transition: "opacity 0.2s ease" }} aria-label="Previous">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6" /></svg>
+      </button>
+      <button onClick={handleNext} disabled={activeIndex === items.length - 1} style={{ position: "absolute", right: 16, top: `calc(50% - ${elevationOffset / 2}px)`, transform: "translateY(-50%)", width: 48, height: 48, borderRadius: "50%", backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid var(--color-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", zIndex: 50, opacity: activeIndex === items.length - 1 ? 0.3 : 1, transition: "opacity 0.2s ease" }} aria-label="Next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+      </button>
     </div>
   );
 }

@@ -110,7 +110,7 @@ export default function ProductFocusCarousel(props) {
     >
       <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <motion.div
-          style={{ display: "flex", alignItems: "center", justifyContent: "center", position: "relative", width: "100%", height: "100%" }}
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", position: "relative", width: "100%", height: "100%", touchAction: "pan-y" }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.2}
@@ -197,7 +197,7 @@ function ArrowButton({ direction, onClick, arrowColor, arrowBackgroundColor }) {
         justifyContent: "center",
         cursor: "pointer",
         boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-        zIndex: 20
+        zIndex: 50
       }}
       onClick={onClick}
       aria-label={direction === "left" ? "Previous" : "Next"}
